@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 
-from .models import User, Post
+from .models import User, Post, Comment
 
 
 def index(request):
@@ -41,18 +41,25 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
-        # Ensure password matches confirmation
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
+
+        # Ensure password matches confirmation
         if password != confirmation:
             return render(request, "network/register.html", {
                 "message": "Passwords must match."
             })
 
+        # Handle image upload
+        image = request.FILES.get("image")
+
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
+            if image:
+                user.image = image
             user.save()
         except IntegrityError:
             return render(request, "network/register.html", {
@@ -76,3 +83,24 @@ def posts(request):
 
     all_posts = Post.objects.order_by('-created_at')
     return render(request, "network/posts.html", {"posts":all_posts})
+
+
+def new_comment(request,post_id):
+    if request.POST:
+        # Get the post and the author, content
+        post = Post.objects.get(id=post_id)
+        author = User.objects.get(id= request.user.id)
+        content = request.POST['comment_input']
+        # Create a new comment
+
+        new_comment = Comment.objects.create(author=author,post=post, content=content)
+        new_comment.save()
+        all_posts = Post.objects.order_by('-created_at')
+        return render(request, "network/posts.html", {"posts":all_posts, "message": "Your comment has been added sucessfully."})
+    else:
+        return None
+    
+
+def post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    return render(request, "network/post.html",{"post": post})
