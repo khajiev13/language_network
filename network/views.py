@@ -103,4 +103,22 @@ def new_comment(request,post_id):
 
 def post(request, post_id):
     post = Post.objects.get(id=post_id)
+
+    if request.POST:
+        #Get the parent ID if there is one
+        parent_id = request.POST['reply_to_comment_id']
+        parent_comment = Comment.objects.get(id=parent_id)
+        comment_content = request.POST['comment_input']
+        author = User.objects.get(id= request.user.id)
+        comment = Comment.objects.create(post=post, parent=parent_comment,author=author,content=comment_content)
+        comment.save()
+        return render(request, "network/post.html",{"post": post, 'message': 'Your comment has been posted.'})
+
     return render(request, "network/post.html",{"post": post})
+
+
+def user(request, user_id):
+    
+    user = User.objects.get(id=user_id)
+    followes = user.followers.all
+    return render(request, "network/user.html",{"user": user, 'followers':followes})

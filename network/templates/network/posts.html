@@ -51,7 +51,7 @@
             <div class="grid gap-8 lg:grid-cols-2 ">
                 {% for post in posts %}
                   <!-- Card-->
-                  <article class="h-fit text-black dark:text-white mb-4 break-inside p-6 rounded-xl bg-slate-200 dark:bg-slate-800 flex flex-col bg-clip-border">
+                  <article class="h-fit text-black dark:text-white mb-4 break-inside p-6 rounded-xl bg-slate-100 dark:bg-slate-800 flex flex-col bg-clip-border">
                     <div class="flex pb-6 items-center justify-between">
                       <div class="flex">
                         <a class="inline-block mr-4" href="#">
@@ -88,57 +88,6 @@
                         <span class="text-lg font-bold">{{post.likes.count}}</span>
                       </a>
                     </div>
-                    <div class="relative">
-                      <form action="{% url 'new_comment' post_id=post.id%}" method="post">
-                        {% csrf_token %}
-                        <input
-                        name="comment_input"  class=" pt-2 pb-2 pl-3 w-full h-11 bg-slate-100 dark:bg-slate-600 rounded-lg placeholder:text-slate-600 dark:placeholder:text-slate-300 font-medium pr-20"
-                        type="text" placeholder="Write a comment" />
-                      <span class="flex absolute right-3 top-2/4 -mt-3 items-center">
-                        <button type="submit">
-                          <svg class="fill-blue-500 dark:fill-slate-50" style="width: 24px; height: 24px;" viewBox="0 0 24 24">
-                            <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"></path>
-                          </svg>
-                        </button>                        
-                      </span>
-                      </form>
-                      
-                    </div>
-                    <!-- Comments content -->
-                    {% for comment in post.comments.all %}
-                      <!-- comments row -->
-                      <div class="media flex pb-4 pt-2">
-                        <a class="inline-block mr-4" href="#">
-                          <img class="rounded-full max-w-none w-12 h-12" src="{{comment.author.image.url}}" />
-                        </a>
-                        <div class="media-body">
-                          <div>
-                            <a class="inline-block text-base font-bold mr-2" href="#">{{comment.author.first_name}}</a>
-                            <span class="text-slate-500 dark:text-slate-300">{{comment.created_at}}</span>
-                          </div>
-                          <p>
-                            {{comment.content}}
-                          </p>
-                          <div class="mt-2 flex items-center">
-                            <a class="inline-flex items-center py-2 mr-3" href="#">
-                              <span class="mr-2">
-                                <svg class="fill-rose-600 dark:fill-rose-400" style="width: 22px; height: 22px;"
-                                  viewBox="0 0 24 24">
-                                  <path
-                                    d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z">
-                                  </path>
-                                </svg>
-                              </span>
-                              <span class="text-base font-bold">2</span>
-                            </a>
-                            <button class="py-2 px-4 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg">
-                              Reply
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- End comments row -->
-                    {% endfor %}
                     
                     <!-- More comments -->
                     <div class="w-full">

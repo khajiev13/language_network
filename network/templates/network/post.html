@@ -2,11 +2,18 @@
 
 {% block body %}
 <section class="bg-white dark:bg-gray-900 py-8 lg:py-16 px-6">
-    <article class="h-fit text-black dark:text-white mb-4 break-inside p-6 rounded-xl bg-slate-200 dark:bg-slate-800 flex flex-col bg-clip-border">
+    <article class="h-fit text-black dark:text-white mb-4 break-inside p-6 rounded-xl bg-gray-100 dark:bg-slate-800 flex flex-col bg-clip-border">
         <div class="flex pb-6 items-center justify-between">
           <div class="flex">
             <a class="inline-block mr-4" href="#">
-              <img class="rounded-full max-w-none w-14 h-14" src="{{post.author.image.url}}" />
+              {% if comment.author.image %}
+                  <img class="rounded-full max-w-none w-14 h-14" src="{{post.author.image.url}}" />
+              {% else %}
+                  <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                      <span class="font-medium text-gray-600 dark:text-gray-300">JL</span>
+                  </div>
+              {% endif %} 
+              
             </a>
             <div class="flex flex-col">
               <div class="flex items-center">
@@ -40,45 +47,177 @@
           </a>
         </div>
         <div class="relative">
-          <form action="{% url 'new_comment' post_id=post.id%}" method="post">
-            {% csrf_token %}
-            <input
-            name="comment_input"  class="dark:border-gray-900 pt-2 pb-2 pl-3 w-full h-11 bg-slate-100 dark:bg-gray-900 rounded-lg placeholder:text-slate-600 dark:placeholder:text-slate-300 font-medium pr-20"
-            type="text" placeholder="Write a comment" />
-          <span class="flex absolute right-3 top-2/4 -mt-3 items-center">
-            <button type="submit">
-              <svg class="fill-blue-500 dark:fill-slate-50" style="width: 24px; height: 24px;" viewBox="0 0 24 24">
-                <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"></path>
-              </svg>
-            </button>                        
-          </span>
+          <form action="{% url 'post' post_id=post.id %}" method="post">
+              {% csrf_token %}
+              <input
+                  name="comment_input"
+                  class="dark:border-gray-900 pt-2 pb-2 pl-3 w-full h-11 bg-slate-100 dark:bg-gray-900 rounded-lg placeholder:text-slate-600 dark:placeholder:text-slate-300 font-medium pr-20"
+                  type="text"
+                  placeholder="Write a comment"
+                  id="comment_input"
+              />
+              <!-- Hidden input field to store the comment ID when replying -->
+              <input type="hidden" name="reply_to_comment_id" id="reply_to_comment_id" value="" />
+              <span class="flex absolute right-3 top-2/4 -mt-3 items-center">
+                  <button type="submit">
+                      <svg class="fill-blue-500 dark:fill-slate-50" style="width: 24px; height: 24px;" viewBox="0 0 24 24">
+                          <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"></path>
+                      </svg>
+                  </button>
+              </span>
           </form>
-          
-        </div>
+        </div>      
         <!-- Comments content -->
         {% for comment in post.comments.all %}
-          <article class="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
-            <footer class="flex justify-between items-center mb-2">
-                <div class="flex items-center">
-                    <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white"><img
-                            class="mr-2 w-6 h-6 rounded-full"
-                            src="{{comment.author.image.url}} "
-                            alt="Jese Leos">{{comment.author.first_name}} {{comment.author.last_name}}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-12"
-                            title="February 12th, 2022">{{comment.created_at}}</time></p>
-                </div>
-            </footer>
-            <p class="text-gray-500 dark:text-gray-400">{{comment.content}}</p>
-            <div class="flex items-center mt-4 space-x-4">
-                <button type="button"
-                    class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400">
-                    <svg aria-hidden="true" class="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                    Reply
-                </button>
-            </div>
-        </article>
+          {% if comment.parent %}
+          {% else %}
+            <article class="p-6 mt-4 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
+              <footer class="flex justify-between items-center mb-2">
+                  <div class="flex items-center">
+                      <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                        {% if comment.author.image %}
+                          <img
+                          class="mr-2 w-6 h-6 rounded-full"
+                          src="{{comment.author.image.url}} "
+                          alt="Jese Leos">
+                        {% else %}
+                          <div class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                              <span class="font-medium text-sm text-gray-600 dark:text-gray-300">JL</span>
+                          </div>
+                        {% endif %} 
+                        {{comment.author.first_name}} {{comment.author.last_name}}</p>
+                      <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-12"
+                              title="February 12th, 2022">{{comment.created_at}}</time></p>
+                  </div>
+              </footer>
+              <p class="text-gray-500 dark:text-gray-400">{{comment.content}}</p>
+              <div class="flex items-center mt-4 space-x-4">
+                  <button type="button" data-comment-id="{{comment.id}}"
+                      class="reply_button flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400">
+                      <svg aria-hidden="true" class="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                      Reply
+                  </button>
+              </div>
+              {% for child_comment in comment.replies.all %}
+                  <article class="p-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
+                    <footer class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white"><img
+                                    class="mr-2 w-6 h-6 rounded-full"
+                                    src="{{child_comment.author.image.url}} "
+                                    alt="Jese Leos">{{child_comment.author.first_name}} {{child_comment.author.last_name}}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-12"
+                                    title="February 12th, 2022">{{child_comment.created_at}}</time></p>
+                        </div>
+                    </footer>
+                    <p class="text-gray-500 dark:text-gray-400">{{child_comment.content}}</p>
+                    <div class="flex items-center mt-4 space-x-2  w-full">
+                        <button type="button"  data-comment-id="{{child_comment.id}}"
+                            class="mr-4 reply_button flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400">
+                            <svg aria-hidden="true" class="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            Reply
+                        </button>
+                        {% if child_comment.replies.exists %}
+                          <button  class="replies_button flex items-center" data-popover-target="popover-right" data-popover-placement="right">
+                            <div class="flex items-center relative">
+                              {% for grandchild in child_comment.replies.all|slice:":5" %}
+                                {% with loop_counter=forloop.counter|add:"1" %}
+                                    {% with loop_counter=loop_counter|add:"5" %}                              
+                                      {% if grandchild.author.image %}
+                                        <img class="rounded-full w-6 h-6 border border-white relative right-{{loop_counter}}" src="{{grandchild.author.image.url}} " alt="prof pic">
+                                      {% else %}
+                                        <div class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                                            <span class="font-medium text-gray-600 dark:text-gray-300">JL</span>
+                                        </div>
+                                      {% endif %}  
+                                    {% endwith %}
+                                {% endwith %}
+                              {% endfor %}
+                            </div>
+                            <div class="text-sm text-gray-500 font-semibold relative">
+                              {{child_comment.replies.count}} {% if child_comment.replies.count > 1 %}Replies{% else %}Reply{% endif %}
+                            </div> 
+                          </button>
+                          <div data-popover id="popover-right" role="tooltip" class="popover absolute z-10 hidden inline-block min-w-full text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+                                <h3 class="font-semibold text-gray-900 dark:text-white">Replies</h3>
+                                <button id="close_replies_button" type="button" class="dark:bg-gray-700 bg-gray-100 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                                  <span class="sr-only dark:bg-gray-700">Close menu</span>
+                                  <!-- Heroicon name: outline/x -->
+                                  <svg class="h-4 w-4 dark:bg-gray-700 bg-gray-100" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                  </svg>
+                                </button>
+                            </div>
+                            <div class="px-4 py-2 overflow-y-auto h-64">
+                                {% for grandchild in child_comment.replies.all %}
+                                  <footer class="flex justify-between items-center mb-2 mt-3">
+                                    <div class="flex items-center">
+                                        <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                                          {% if grandchild.author.image %}
+                                            <img
+                                            class="mr-2 w-6 h-6 rounded-full"
+                                            src="{{grandchild.author.image.url}} "
+                                            alt="Jese Leos">
+                                          {% else %}
+                                              <div class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                                                  <span class="font-medium text-gray-600 dark:text-gray-300">JL</span>
+                                              </div>
+                                          {% endif %}  
+                                          {{grandchild.author.first_name}} {{grandchild.author.last_name}}</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-12"
+                                                title="February 12th, 2022">{{grandchild.created_at}}</time></p>
+                                    </div>
+                                  </footer>
+                                  <p class="text-gray-500 dark:text-gray-400">{{grandchild.content}}</p>
+                                {% endfor %}
+                            </div>
+                            <div data-popper-arrow></div>
+                          </div>
+                        {% endif %}
+                    </div>
+                  </article>
+              {% endfor %}
+            </article>
+          {% endif %}   
         {% endfor %}
-        
     </article>
   </section>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function() {
+      let buttons = document.querySelectorAll('.replies_button')
+      let popover = document.querySelector('.popover')
+      let close_replies_button = document.querySelector('#close_replies_button')
+
+      buttons.forEach((button) =>{
+        button.addEventListener('click', ()=>{
+          popover.classList.toggle('hidden')
+        })
+      })
+      close_replies_button.addEventListener('click', ()=>{
+        popover.classList.toggle('hidden')
+      })
+      
+      // Get the reply button elements
+      const replyButtons = document.querySelectorAll('.reply_button');
+      // Add click event listener to each reply button
+      replyButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+              // Get the comment ID from the data attribute
+              const commentID = button.dataset.commentId;
+              console.log(commentID)
+
+              // Set the comment ID in the hidden input field
+              const replyInput = document.getElementById('reply_to_comment_id');
+              replyInput.value = commentID;
+
+              // Focus on the comment input field
+              const commentInput = document.getElementById('comment_input');
+              commentInput.focus();
+          });
+      });
+  });
+    
+  </script>
+
 {% endblock %}
