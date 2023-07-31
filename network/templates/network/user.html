@@ -25,14 +25,19 @@
                 </ul>
             </div>
         </div>
-        <div class="flex flex-col items-center pb-10">
-            <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="{{user.image.url}}" alt="Bonnie image"/>
-            <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">{{user.first_name}} {{user.last_name}}</h5>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Visual Designer</span>
-            <div class="flex mt-4 space-x-3 md:mt-6">
-                <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Follow</a>
-                <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">Message</a>
-            </div>
+        <div class="flex flex-col items-center ">
+            <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="{{user_info.image.url}}" alt="Bonnie image"/>
+            <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">{{user_info.first_name}} {{user_info.last_name}}</h5>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Chinese Learner</span>
+            {% if user_info.id != user.id %}
+                <div class="flex mt-4 space-x-3 md:mt-6">
+                    <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Follow</a>
+                    <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">Message</a>
+                </div>
+            {% endif %}
+           
+        
+                
         </div>
     </div>
     
@@ -46,124 +51,142 @@
                     <button class="aria-selected:text-blue-600 inline-block p-4 border-b-2 rounded-t-lg" id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">Following</button>
                 </li>
                 <li class="mr-2" role="presentation">
-                    <button class="aria-selected:text-blue-600 inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Settings</button>
+                    <button class="aria-selected:text-blue-600 inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Followers</button>
                 </li>
                 <li role="presentation">
-                    <button class="aria-selected:text-blue-600 inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-tab" data-tabs-target="#contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">Contacts</button>
+                    <button class="aria-selected:text-blue-600 inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-tab" data-tabs-target="#contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">Posts</button>
                 </li>
             </ul>
         </div>
-        <div class="w-full" id="myTabContent">
-            <div class="w-full hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+        <div id="myTabContent">
+            <div class="w-full hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800 flex justify-center" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <a href="#" class="lg:text-2xl max-w-full block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
+                <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order. Hi! My name is ROma. I'm 23 years old and right now I'm learning Chinese</p>
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Teaching: <span class="font-black text-gray-900 dark:text-white">English</span></h5>
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Learning: <span>Chinese</span></h5>
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Instagram: <span>khajiev13</span></h5>
+            </a>
             </div>
             <div class="w-full hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
 
-                <div class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-4">
                         <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Following</h5>
                    </div>
-                   <div class="flow-root">
-                        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700 grid grid-rows-3 overflow-x-auto">
-                            <li class="py-3 sm:py-4">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Neil image">
+                   <div class="flow-roo w-full">
+                        <ul role="list" class="w-full divide-y divide-gray-200 dark:divide-gray-700 grid lg:grid-flow-col lg:grid-rows-3 overflow-x-auto gap-6">
+                            {% for following in user_info.following.all %}
+                                <li class="py-3 sm:py-4">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="flex-shrink-0">
+                                            <img class="w-8 h-8 rounded-full" src="{{following.image.url}}" alt="User image">
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <a href="{% url 'user' user_id=following.id %}"" class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                                {{following.first_name}} {{following.last_name}}
+                                            </a>
+                                            <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                                {{following.email}}
+                                            </p>
+                                        </div>
+                                        <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                            <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Follow</a>
+                                        </div>
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            Neil Sims
-                                        </p>
-                                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                            email@windster.com
-                                        </p>
-                                    </div>
-                                    <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                        <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Follow</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="py-3 sm:py-4">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Bonnie image">
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            Bonnie Green
-                                        </p>
-                                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                            email@windster.com
-                                        </p>
-                                    </div>
-                                    <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                        $3467
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="py-3 sm:py-4">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-2.jpg" alt="Michael image">
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            Michael Gough
-                                        </p>
-                                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                            email@windster.com
-                                        </p>
-                                    </div>
-                                    <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                        $67
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="py-3 sm:py-4">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-4.jpg" alt="Lana image">
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            Lana Byrd
-                                        </p>
-                                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                            email@windster.com
-                                        </p>
-                                    </div>
-                                    <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                        $367
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="pt-3 pb-0 sm:pt-4">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-5.jpg" alt="Thomas image">
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            Thomes Lean
-                                        </p>
-                                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                            email@windster.com
-                                        </p>
-                                    </div>
-                                    <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                        $2367
-                                    </div>
-                                </div>
-                            </li>
+                                </li>
+                            {% endfor %}
+                            
                         </ul>
                    </div>
                 </div>                
             </div>
             <div class="w-full hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-                <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Settings tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center justify-between mb-4">
+                        <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Following</h5>
+                   </div>
+                   <div class="flow-roo w-full">
+                        <ul role="list" class="w-full divide-y divide-gray-200 dark:divide-gray-700 grid lg:grid-flow-col lg:grid-rows-3 overflow-x-auto gap-6">
+                            {% for follower in user_info.followers.all %}
+                                <li class="py-3 sm:py-4">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="flex-shrink-0">
+                                            <img class="w-8 h-8 rounded-full" src="{{follower.image.url}}" alt="User image">
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <a href="{% url 'user' user_id=follower.id %}"" class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                                {{follower.first_name}} {{follower.last_name}}
+                                            </a>
+                                            <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                                {{follower.email}}
+                                            </p>
+                                        </div>
+                                        <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                            <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Follow</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            
+                        </ul>
+                   </div>
+                </div>   
             </div>
             <div class="w-full hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
-                <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                {% for post in posts %}
+                  <!-- Card-->
+                  <article class="h-fit text-black dark:text-white mb-4 break-inside p-6 rounded-xl bg-slate-100 dark:bg-slate-800 flex flex-col bg-clip-border">
+                    <div class="flex pb-6 items-center justify-between">
+                      <div class="flex">
+                        <a class="inline-block mr-4" href="{% url 'user' user_id=user.id %}">
+                          <img class="rounded-full max-w-none w-14 h-14" src="{{post.author.image.url}}" />
+                        </a>
+                        <div class="flex flex-col">
+                          <div class="flex items-center">
+                            <a class="inline-block text-lg font-bold mr-2" href="{% url 'user' user_id=user.id %}"> {{post.author.first_name}} {{post.author.last_name}}</a>
+                            <span class="text-slate-500 dark:text-slate-300">{{post.created_at}}</span>
+                          </div>
+                          <div class="text-slate-500 dark:text-slate-300">
+                            English
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <h2 class="text-3xl font-extrabold">
+                      {{ post.title }}
+                    </h2>
+                    <div class="py-4">
+                      <p>
+                        {{post.content}}
+                      </p>
+                    </div>
+                    <div class="py-4">
+                      <a class="inline-flex items-center" href="#">
+                        <span class="mr-2">
+                          <svg class="fill-rose-600 dark:fill-rose-400" style="width: 24px; height: 24px;" viewBox="0 0 24 24">
+                            <path
+                              d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z">
+                            </path>
+                          </svg>
+                        </span>
+                        <span class="text-lg font-bold">{{post.likes.count}}</span>
+                      </a>
+                    </div>
+                    
+                    <!-- More comments -->
+                    <div class="w-full">
+                      <a href="{% url 'post' post_id=post.id%}"
+                        class="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">Show
+                        more comments +{{post.comments.count}}</a> 
+                        Use a modal to display the entire modal with comments with view transition API
+                    </div>
+                    <!-- End More comments -->
+                  <!-- End Comments content -->
+                </article>
+                <!-- Close card -->       
+              {% endfor %}
+              
             </div>
         </div>
     </div>

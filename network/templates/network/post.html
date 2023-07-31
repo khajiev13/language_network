@@ -5,7 +5,7 @@
     <article class="h-fit text-black dark:text-white mb-4 break-inside p-6 rounded-xl bg-gray-100 dark:bg-slate-800 flex flex-col bg-clip-border">
         <div class="flex pb-6 items-center justify-between">
           <div class="flex">
-            <a class="inline-block mr-4" href="#">
+            <a class="inline-block mr-4" href="{% url 'user' user_id=post.author.id %}">
               {% if comment.author.image %}
                   <img class="rounded-full max-w-none w-14 h-14" src="{{post.author.image.url}}" />
               {% else %}
@@ -17,7 +17,7 @@
             </a>
             <div class="flex flex-col">
               <div class="flex items-center">
-                <a class="inline-block text-lg font-bold mr-2" href="#"> {{post.author.first_name}} {{post.author.last_name}}</a>
+                <a class="inline-block text-lg font-bold mr-2" href="{% url 'user' user_id=post.author.id %}"> {{post.author.first_name}} {{post.author.last_name}}</a>
                 <span class="text-slate-500 dark:text-slate-300">{{post.created_at}}</span>
               </div>
               <div class="text-slate-500 dark:text-slate-300">
@@ -74,7 +74,7 @@
             <article class="p-6 mt-4 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
               <footer class="flex justify-between items-center mb-2">
                   <div class="flex items-center">
-                      <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                      <a href="{% url 'user' user_id=comment.author.id %}" class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
                         {% if comment.author.image %}
                           <img
                           class="mr-2 w-6 h-6 rounded-full"
@@ -85,7 +85,7 @@
                               <span class="font-medium text-sm text-gray-600 dark:text-gray-300">JL</span>
                           </div>
                         {% endif %} 
-                        {{comment.author.first_name}} {{comment.author.last_name}}</p>
+                        {{comment.author.first_name}} {{comment.author.last_name}}</a>
                       <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-12"
                               title="February 12th, 2022">{{comment.created_at}}</time></p>
                   </div>
@@ -102,10 +102,10 @@
                   <article class="p-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
                     <footer class="flex justify-between items-center mb-2">
                         <div class="flex items-center">
-                            <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white"><img
+                            <a href="{% url 'user' user_id=child_comment.author.id %}" class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white"><img
                                     class="mr-2 w-6 h-6 rounded-full"
                                     src="{{child_comment.author.image.url}} "
-                                    alt="Jese Leos">{{child_comment.author.first_name}} {{child_comment.author.last_name}}</p>
+                                    alt="Jese Leos">{{child_comment.author.first_name}} {{child_comment.author.last_name}}</a>
                             <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-12"
                                     title="February 12th, 2022">{{child_comment.created_at}}</time></p>
                         </div>
@@ -138,10 +138,9 @@
                               {{child_comment.replies.count}} {% if child_comment.replies.count > 1 %}Replies{% else %}Reply{% endif %}
                             </div> 
                           </button>
-                          <div data-popover id="popover-right" role="tooltip" class="popover absolute z-10 hidden inline-block min-w-full text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                          <div data-popover id="popover-right" role="tooltip" class="popover absolute z-10  inline-block min-w-fit text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
                             <div class="flex items-center justify-between px-4 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
                                 <h3 class="font-semibold text-gray-900 dark:text-white">Replies</h3>
-                                <button id="close_replies_button" type="button" class="dark:bg-gray-700 bg-gray-100 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                                   <span class="sr-only dark:bg-gray-700">Close menu</span>
                                   <!-- Heroicon name: outline/x -->
                                   <svg class="h-4 w-4 dark:bg-gray-700 bg-gray-100" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -153,7 +152,7 @@
                                 {% for grandchild in child_comment.replies.all %}
                                   <footer class="flex justify-between items-center mb-2 mt-3">
                                     <div class="flex items-center">
-                                        <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                                        <a href="{% url 'user' user_id=grandchild.author.id %}" class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
                                           {% if grandchild.author.image %}
                                             <img
                                             class="mr-2 w-6 h-6 rounded-full"
@@ -164,7 +163,7 @@
                                                   <span class="font-medium text-gray-600 dark:text-gray-300">JL</span>
                                               </div>
                                           {% endif %}  
-                                          {{grandchild.author.first_name}} {{grandchild.author.last_name}}</p>
+                                          {{grandchild.author.first_name}} {{grandchild.author.last_name}}</a>
                                         <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-02-12"
                                                 title="February 12th, 2022">{{grandchild.created_at}}</time></p>
                                     </div>
@@ -187,16 +186,12 @@
     document.addEventListener('DOMContentLoaded', function() {
       let buttons = document.querySelectorAll('.replies_button')
       let popover = document.querySelector('.popover')
-      let close_replies_button = document.querySelector('#close_replies_button')
 
       buttons.forEach((button) =>{
         button.addEventListener('click', ()=>{
           popover.classList.toggle('hidden')
-        })
-      })
-      close_replies_button.addEventListener('click', ()=>{
-        popover.classList.toggle('hidden')
-      })
+        });
+      });
       
       // Get the reply button elements
       const replyButtons = document.querySelectorAll('.reply_button');

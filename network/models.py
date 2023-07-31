@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -8,9 +9,19 @@ class User(AbstractUser):
     followers = models.ManyToManyField(
         'self', related_name='following', symmetrical=False)
     image = models.FileField(upload_to='network/images')
-    
+    # Introduction of user
+    # Target language
+    # Learning language
+    # Contacts 
     def __str__(self):
         return self.username
+    
+    def save(self, *args, **kwargs):
+        # Check if the user is trying to follow themselves
+        if self in self.following.all():
+            raise ValidationError("You cannot follow yourself.")
+
+        super().save(*args, **kwargs)
 
 
 class Post(models.Model):

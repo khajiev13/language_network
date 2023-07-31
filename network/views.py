@@ -1,11 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-
-
-from .models import User, Post, Comment
+from .models import User, Post, Comment, Like
 
 
 def index(request):
@@ -107,10 +105,13 @@ def post(request, post_id):
     if request.POST:
         #Get the parent ID if there is one
         parent_id = request.POST['reply_to_comment_id']
-        parent_comment = Comment.objects.get(id=parent_id)
         comment_content = request.POST['comment_input']
         author = User.objects.get(id= request.user.id)
-        comment = Comment.objects.create(post=post, parent=parent_comment,author=author,content=comment_content)
+        if len(parent_id) > 0:
+            parent_comment = Comment.objects.get(id=parent_id)
+            comment = Comment.objects.create(post=post, parent=parent_comment,author=author,content=comment_content)
+        else:
+            comment = Comment.objects.create(post=post, author=author,content=comment_content)
         comment.save()
         return render(request, "network/post.html",{"post": post, 'message': 'Your comment has been posted.'})
 
@@ -120,5 +121,46 @@ def post(request, post_id):
 def user(request, user_id):
     
     user = User.objects.get(id=user_id)
-    followes = user.followers.all
-    return render(request, "network/user.html",{"user": user, 'followers':followes})
+    posts = user.posts.order_by('-created_at')
+    context = {
+        "user_info": user, 
+        'posts':posts,
+      
+    }
+    return render(request, "network/user.html",context)
+
+
+def following(request):
+    posts = list()
+    following = request.user.following.all()
+    for follow in following:
+        for each_post in follow.posts.all():
+            posts.append(each_post)
+    print(posts)
+    context = {
+        "posts": posts
+    }
+    return render(request, "network/following.html", context)
+
+
+def toggle_like(request, post_id):
+    if request.method == 'POST' and request.user.is_authenticated:
+        post = get_object_or_404(Post, id=post_id)
+        liked = post.likes.filter(user=request.user).exists()
+        if liked:
+            post.likes.filter(user=request.user).delete()
+        else:
+            Like.objects.create(user=request.user, post=post)
+        return JsonResponse({'likes_count': post.likes.count()})
+    return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+def edit_post(request, post_id):
+    if request.method == "POST" and request.user.is_authenticated:
+        post = get_object_or_404(Post, id=post_id)
+        if request.user == post.author:
+            post.title = request.POST.get('title','')
+            post.content = request.POST.get('content','')
+            post.save()
+            return JsonResponse({'success': True})
+        return JsonResponse({'content': post.content})
+    return JsonResponse({'error': 'Unauthorized'}, status=401)
