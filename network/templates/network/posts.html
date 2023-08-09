@@ -10,7 +10,8 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
       </svg>
     </div>
-  </div></button>
+  </div>
+</button>
 
 <!-- Main modal -->
 <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -57,7 +58,13 @@
                     <div class="flex pb-6 items-center justify-between">
                       <div class="flex">
                         <a class="inline-block mr-4" href="{% url 'user' user_id=post.author.id %}">
-                          <img class="rounded-full max-w-none w-14 h-14" src="{{post.author.image.url}}" />
+                          {% if post.author.image %}
+                            <img class="rounded-full max-w-none w-14 h-14" src="{{post.author.image.url}}" 
+                          {% else %}
+                            <div class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                              <span class="font-medium text-gray-600 dark:text-gray-300">JL</span>
+                            </div>
+                          {% endif %}
                         </a>
                         <div class="flex flex-col">
                           <div class="flex items-center">
@@ -72,7 +79,7 @@
                       </div>
                       {% if post.author.id == user.id %}
                         <!-- Modal toggle -->
-                        <button id="updateProductButton" data-modal-toggle="updateProductModal" class="update_button inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                        <button id="updateProductButton" data-modal-toggle="updateProductModal" class=" inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
                         Edit
                         </button>
                         <!-- Main modal -->
@@ -85,13 +92,13 @@
                                       <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                                           Edit Post
                                       </h3>
-                                      <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="updateProductModal">
+                                      <button type="button" class=" text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="updateProductModal">
                                           <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                                           <span class="sr-only">Close modal</span>
                                       </button>
                                   </div>
                                   <!-- Modal body -->
-                                  <form action="#">
+                                  <div>
                                       <div class="grid gap-4 mb-4 sm:grid-cols-2">
                                           <div>
                                               <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
@@ -103,25 +110,25 @@
                                           </div>
                                       </div>
                                       <div class="flex items-center space-x-4">
-                                          <button id="{{post.id}}" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                          <a data-modal-toggle="updateProductModal" id="{{post.id}}" href="#" class="update_button text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                               Update product
-                                          </button>
+                                          </a>
                                           <button id="{{post.id}}" type="button" class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                                               <svg class="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
                                               Delete
                                           </button>
                                       </div>
-                                  </form>
+                                    </div>
                               </div>
                           </div>
                         </div>
                       {% endif %}
                     </div>
-                    <h2 class="text-3xl font-extrabold">
+                    <h2 class="text-3xl font-extrabold" id="title_{{post.id}}">
                       {{ post.title }}
                     </h2>
                     <div class="py-4">
-                      <p>
+                      <p id="content_{{post.id}}">
                         {{post.content}}
                       </p>
                     </div>
@@ -149,11 +156,82 @@
                 </article>
                 <!-- Close card -->       
               {% endfor %}
-              {% endblock %}
+              
                 
             </div>  
         </div>
     </section>
+    <div class="flex justify-center mb-9">
+            
+      {% if page_obj.has_previous %}
+      <nav aria-label="Page navigation example" class="mb-8">
+        <ul class="inline-flex -space-x-px text-base h-10">
+          <li>
+            <a href="?page={{ page_obj.previous_page_number }}" class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              « Previous page
+            </a>
+          </li>
+
+          {% if page_obj.number > 3 %}
+            <li>
+              <a href="?page=1" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                1
+              </a>
+            </li>
+            {% if page_obj.number > 4 %}
+              <li>
+                <span class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                  ...
+                </span>
+              </li>
+            {% endif %}
+          {% endif %}
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num or num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <li class="list-none">
+            <a href="?page={{ num }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              {{ num }}
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+
+      {% if page_obj.has_next %}
+        <nav aria-label="Page navigation example" class="mb-8">
+
+        {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+          <li class="list-none">
+            <span class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              ...
+            </span>
+          </li>
+          <li class="list-none">
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              {{ page_obj.paginator.num_pages }}
+            </a>
+          </li>
+        {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+          <li class="list-none">
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              {{ page_obj.paginator.num_pages }}
+            </a>
+          </li>
+        {% endif %}
+        <li class="list-none">
+          <a href="?page={{ page_obj.next_page_number }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            Next Page »
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+      </nav>
+
+    </div>
+    {% endblock %}
+
     
     <script>
       // Get references to the toggle button and modal element
@@ -201,8 +279,38 @@
       // Edit post
       const update_buttons = document.querySelectorAll('.update_button')
       update_buttons.forEach((button) =>{
-        button.addEventListener('click', {
+        button.addEventListener('click',(e)=> {
+          e.preventDefault();
+          const post_id = button.id
+          const input_content = document.getElementById(`content-${post_id}`)
+          const input_title = document.getElementById(`title-${post_id}`)
+          const data = {
+            title: input_title.value,
+            content: input_content.value,
+          };
 
+          fetch(`/edit_post/${post_id}/`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': csrftoken,
+              },
+              credentials: 'same-origin',
+              body: JSON.stringify(data),
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(post_id, csrftoken, data)
+              if (data.error) {
+                console.error(data.error);
+              } else {
+                let title = document.getElementById(`title_${post_id}`);
+                let content = document.getElementById(`content_${post_id}`);
+                content.innerHTML = data.content;
+                title.innerText = data.title
+              }
+            })
+            .catch(error => console.error(error));
         })
       })
     </script>

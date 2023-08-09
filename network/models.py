@@ -16,12 +16,12 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
     
-    def save(self, *args, **kwargs):
-        # Check if the user is trying to follow themselves
-        if self in self.following.all():
-            raise ValidationError("You cannot follow yourself.")
+    # def save(self, *args, **kwargs):
+    #     # Check if the user is trying to follow themselves
+    #     if self in self.following.all():
+    #         raise ValidationError("You cannot follow yourself.")
 
-        super().save(*args, **kwargs)
+    #     super().save(*args, **kwargs)
 
 
 class Post(models.Model):

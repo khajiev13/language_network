@@ -4,7 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import User, Post, Comment, Like
-
+from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
+import json
 
 def index(request):
     return render(request, "network/index.html")
@@ -80,7 +81,17 @@ def posts(request):
         return render(request, "network/posts.html", {"posts":all_posts, "message": "Your post has been added sucessfully."})
 
     all_posts = Post.objects.order_by('-created_at')
-    return render(request, "network/posts.html", {"posts":all_posts})
+    page = request.GET.get('page', 1)
+    paginator = Paginator(all_posts, 10)
+    users = None
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
+    return render(request, "network/posts.html", {"posts":posts, 'page_obj':posts})
 
 
 def new_comment(request,post_id):
@@ -158,9 +169,12 @@ def edit_post(request, post_id):
     if request.method == "POST" and request.user.is_authenticated:
         post = get_object_or_404(Post, id=post_id)
         if request.user == post.author:
-            post.title = request.POST.get('title','')
-            post.content = request.POST.get('content','')
-            post.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'content': post.content})
+            try:
+                data = json.loads(request.body)
+                post.title = data.get('title', '')
+                post.content = data.get('content', '')
+                post.save()
+                return JsonResponse({'success': True, 'content': post.content, 'title': post.title})
+            except json.JSONDecodeError as e:
+                return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     return JsonResponse({'error': 'Unauthorized'}, status=401)
