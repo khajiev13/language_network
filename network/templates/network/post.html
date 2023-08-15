@@ -6,7 +6,7 @@
         <div class="flex pb-6 items-center justify-between">
           <div class="flex">
             <a class="inline-block mr-4" href="{% url 'user' user_id=post.author.id %}">
-              {% if comment.author.image %}
+              {% if post.author.image %}
                   <img class="rounded-full max-w-none w-14 h-14" src="{{post.author.image.url}}" />
               {% else %}
                   <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
@@ -35,7 +35,8 @@
           </p>
         </div>
         <div class="py-4">
-          <a class="inline-flex items-center" href="#">
+          <a class="inline-flex items-center like_button" href="#" id="like_button" data-post-id="{{ post.id }}">
+            {% csrf_token %}
             <span class="mr-2">
               <svg class="fill-rose-600 dark:fill-rose-400" style="width: 24px; height: 24px;" viewBox="0 0 24 24">
                 <path
@@ -43,7 +44,7 @@
                 </path>
               </svg>
             </span>
-            <span class="text-lg font-bold">{{post.likes.count}}</span>
+            <span class="text-lg font-bold" id="likes-count-{{ post.id }}">{{ post.likes.count }}</span>
           </a>
         </div>
         <div class="relative">
@@ -214,6 +215,34 @@
               const commentInput = document.getElementById('comment_input');
               commentInput.focus();
           });
+      });
+
+       // Like toggle button 
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      document.querySelectorAll('.like_button').forEach(likeButton => {
+        likeButton.addEventListener('click', (event) => {
+          const postId = likeButton.getAttribute('data-post-id');
+          event.preventDefault();
+          fetch(`/toggle_like/${postId}/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+            },
+            credentials: 'same-origin',
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(postId, csrftoken, data)
+              if (data.error) {
+                console.error(data.error);
+              } else {
+                const likesCountElement = document.getElementById(`likes-count-${postId}`);
+                likesCountElement.textContent = data.likes_count;
+              }
+            })
+            .catch(error => console.error(error));
+        });
       });
   });
     

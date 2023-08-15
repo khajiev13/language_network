@@ -130,13 +130,25 @@ def post(request, post_id):
 
 
 def user(request, user_id):
-    
     user = User.objects.get(id=user_id)
     posts = user.posts.order_by('-created_at')
+    if request.method == 'POST' and request.user.is_authenticated:
+        follow_value = request.POST.get('follow')
+        print(follow_value)
+        if follow_value == "True":
+            request.user.following.add(user)
+            print('True')
+        else:
+            print('False')
+            request.user.following.remove(user)
+    if request.user in user.followers.all():
+        followers = True
+    else:
+        followers = False
     context = {
         "user_info": user, 
         'posts':posts,
-      
+        'followers': followers
     }
     return render(request, "network/user.html",context)
 
@@ -147,9 +159,19 @@ def following(request):
     for follow in following:
         for each_post in follow.posts.all():
             posts.append(each_post)
-    print(posts)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(posts, 10)
+    users = None
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
     context = {
-        "posts": posts
+        "posts": posts,
+        'page_obj':posts
     }
     return render(request, "network/following.html", context)
 
