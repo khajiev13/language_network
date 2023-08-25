@@ -1,0 +1,132 @@
+{% extends "network/posts.html" %}
+
+{% block content %}
+{% for post in posts %}
+    <!-- Card-->
+    <article class="h-fit text-black dark:text-white mb-4 break-inside p-6 rounded-xl bg-slate-100 dark:bg-slate-800 flex flex-col bg-clip-border">
+      <div class="flex pb-6 items-center justify-between">
+        <div class="flex">
+          <a class="inline-block mr-4" href="{% url 'user' user_id=post.author.id %}">
+            {% if post.author.image %}
+              <img class="rounded-full max-w-none w-14 h-14" src="{{post.author.image.url}}" 
+            {% else %}
+              <div class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                <span class="font-medium text-gray-600 dark:text-gray-300">JL</span>
+              </div>
+            {% endif %}
+          </a>
+          <div class="flex flex-col">
+            <div class="flex items-center">
+              <a class="inline-block text-lg font-bold mr-2" href="{% url 'user' user_id=post.author.id %}"> {{post.author.first_name}} {{post.author.last_name}}</a>
+              <span class="text-slate-500 dark:text-slate-300">{{post.created_at}}</span>
+            </div>
+            <div class="text-slate-500 dark:text-slate-300">
+              English
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="text-3xl font-extrabold">
+        {{ post.title }}
+      </h2>
+      <div class="py-4">
+        <p>
+          {{post.content}}
+        </p>
+      </div>
+      <div class="py-4 flex align-middle gap-7">
+        
+        <a class="inline-flex items-center like_button" href="#" id="like_button" data-post-id="{{ post.id }}">
+          <span class="mr-2">
+            <svg class="fill-rose-600 dark:fill-rose-400" style="width: 24px; height: 24px;" viewBox="0 0 24 24">
+              <path
+                d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z">
+              </path>
+            </svg>
+          </span>
+          <span class="text-lg font-bold" id="likes-count-{{ post.id }}">{{ post.likes.count }}</span>
+        </a>
+        
+        <!--comments -->
+        <a href="{% url 'post' post_id=post.id%}" type="button" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Comments
+          <span class="inline-flex items-center justify-center w-4 h-4 ml-2 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+            {{post.comments.count}}
+          </span>
+          {% csrf_token %}
+        </a>
+      </div>
+  </article>
+  <!-- Close card -->      
+
+{% endfor %}
+<div class="flex justify-center mb-9">
+            
+  {% if page_obj.has_previous %}
+  <nav aria-label="Page navigation example" class="mb-8">
+    <ul class="inline-flex -space-x-px text-base h-10">
+      <li>
+        <a href="?page={{ page_obj.previous_page_number }}" class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          « Previous page
+        </a>
+      </li>
+
+      {% if page_obj.number > 3 %}
+        <li>
+          <a href="?page=1" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            1
+          </a>
+        </li>
+        {% if page_obj.number > 4 %}
+          <li>
+            <span class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              ...
+            </span>
+          </li>
+        {% endif %}
+      {% endif %}
+  {% endif %}
+
+  {% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num or num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+      <li class="list-none">
+        <a href="?page={{ num }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          {{ num }}
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+
+
+  {% if page_obj.has_next %}
+    <nav aria-label="Page navigation example" class="mb-8">
+
+    {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+      <li class="list-none">
+        <span class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          ...
+        </span>
+      </li>
+      <li class="list-none">
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          {{ page_obj.paginator.num_pages }}
+        </a>
+      </li>
+    {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+      <li class="list-none">
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          {{ page_obj.paginator.num_pages }}
+        </a>
+      </li>
+    {% endif %}
+    <li class="list-none">
+      <a href="?page={{ page_obj.next_page_number }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+        Next Page »
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+  </nav>
+
+</div>
+{% endblock %}
