@@ -200,3 +200,8 @@ def edit_post(request, post_id):
             except json.JSONDecodeError as e:
                 return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+def message(request, user_id):
+    if request.user.is_authenticated:
+        user = User.objects.get(id=user_id)
+        return render(request, "network/message.html",{'user_info':user})
