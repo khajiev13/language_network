@@ -1,7 +1,6 @@
 from django.apps import AppConfig
 
 from django.apps import AppConfig
-from myapp.management.commands.run_tailwind import Command as RunTailwindCommand
 
 
 
