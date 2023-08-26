@@ -4,6 +4,7 @@ if ! command -v honcho &> /dev/null
 then
   echo "Installing honcho…"
   pip install honcho
+  python manage.py collectstatic
   python manage.py tailwind start
 fi
 
