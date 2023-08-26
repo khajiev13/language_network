@@ -1,0 +1,10 @@
+asgiref==3.6.0
+channels==4.0.0
+Django==4.1.7
+django-browser-reload==1.10.0
+django-tailwind==3.6.0
+sqlparse==0.4.3
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+tzdata==2023.3
+Twisted==22.10.0
+
