@@ -4,12 +4,13 @@ if ! command -v honcho &> /dev/null
 then
   echo "Installing honcho…"
   pip install honcho
+  python manage.py tailwind start
 fi
 
 if [ ! -f ".once" ]; then
   # Run one-time commands here
   echo "Running one-time commands..."
-  python manage.py tailwind start
+  
   touch .once  # Create a marker file to indicate that one-time commands have been executed
 fi
 
