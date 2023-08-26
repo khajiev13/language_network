@@ -6,4 +6,13 @@ then
   pip install honcho
 fi
 
-honcho start -f Procfile.dev
+if [ ! -f ".once" ]; then
+  # Run one-time commands here
+  echo "Running one-time commands..."
+  python manage.py tailwind start
+  touch .once  # Create a marker file to indicate that one-time commands have been executed
+fi
+
+# Start the continuous processes
+echo "Starting continuous processes..."
+gunicorn project4.wsgi
