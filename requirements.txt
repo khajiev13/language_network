@@ -3,8 +3,11 @@ channels==4.0.0
 Django==4.1.7
 django-browser-reload==1.10.0
 django-tailwind==3.6.0
+dj-database-url==2.0.0
+psycopg2-binary==
+gunicorn==20.1.0
 sqlparse==0.4.3
-six @ file:///tmp/build/80754af9/six_1644875935023/work
 tzdata==2023.3
 Twisted==22.10.0
+typing_extensions==4.7.0
 
