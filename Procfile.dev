@@ -1,0 +1,3 @@
+css: python manage.py tailwind start
+celery: celery
+gunicorn: gunicorn project4.wsgi

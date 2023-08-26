@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if ! command -v honcho &> /dev/null
+then
+  echo "Installing honcho…"
+  pip install honcho
+fi
+
+honcho start -f Procfile.dev
