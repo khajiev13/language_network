@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-
+if ! command -v honcho &> /dev/null
+then
+  echo "Installing honcho…"
+  pip install honcho
+  python manage.py collectstatic
+  python manage.py tailwind start
+fi
 
 if [ ! -f ".once" ]; then
   # Run one-time commands here
@@ -11,10 +17,3 @@ fi
 # Start the continuous processes
 echo "Starting continuous processes..."
 gunicorn project4.wsgi
-
-if ! command -v honcho &> /dev/null
-then
-  echo "Calling static files"
-  python manage.py collectstatic
-  python manage.py tailwind start
-fi
