@@ -164,10 +164,5 @@ USE_TZ = True
 STATIC_URL = 'theme/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'theme/static/')
 
-
-
-
-# settings.py
-
-MEDIA_URL = ''
-MEDIA_ROOT = ''
+MEDIA_URL = 'theme/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'theme/static/')
