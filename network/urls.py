@@ -7,6 +7,7 @@ from . import views
 
 urlpatterns = [
     path("", views.posts, name="index"),
+    path("__reload__/", include("django_browser_reload.urls")),
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
@@ -18,8 +19,6 @@ urlpatterns = [
     path('users/<int:user_id>/message', views.message, name='message'),
     path('toggle_like/<int:post_id>/', views.toggle_like, name='toggle_like'),
     path('edit_post/<int:post_id>/', views.edit_post, name='edit_post'),
-
-    path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

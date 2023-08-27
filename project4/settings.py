@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'network',
     'tailwind',
     'theme',
     'django_browser_reload',
-    'network',
 ]
 
 CHANNEL_LAYERS = {
@@ -161,8 +161,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'theme/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+
 
 
 # settings.py
