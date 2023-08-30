@@ -46,3 +46,10 @@ class ChatConsumer(WebsocketConsumer):
             'type':'chat',
             'message':message
         }))
+    def typing(self, event):
+        typing_message = {
+            'type': 'typing',
+            'user': event['user']
+        }
+
+        self.send(text_data=json.dumps(typing_message))

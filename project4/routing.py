@@ -1,5 +1,6 @@
 from django.urls import re_path
-from . import consumers
+from ..network import consumers
+
 
 
 print("Routing py is running")

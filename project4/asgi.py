@@ -4,7 +4,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from django.urls import path
 from network.consumers import ChatConsumer
 from channels.auth import AuthMiddlewareStack
-import network.routing
+from .  import routing
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project4.settings')
