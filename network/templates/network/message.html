@@ -4,45 +4,10 @@
 
 <div class="flex flex-col items-center justify-center w-full z-50 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-5rem)] max-h-full ">
 
-	<!-- Component Start -->
+	<!-- Component  -->
 	<div class="flex flex-col flex-grow w-full h-max bg-white border-gray-200 dark:bg-gray-900 shadow-xl rounded-lg overflow-hidden px-30">
 		<div class="flex flex-col flex-grow p-4 overflow-auto" id="messages" >
-			<!-- <div class="flex w-full mt-2 space-x-3 max-w-xs">
-				{% if user.image %}
-					<img
-					class="mr-2 w-10 h-10 rounded-full"
-					src="{{user.image.url}} "
-					alt="Jese Leos">
-				{% else %}
-					<div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-						<span class="font-medium text-sm text-gray-600 dark:text-gray-300">JL</span>
-					</div>
-				{% endif %} 
-				<div>
-					<div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-						<p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-					</div>
-					<span class="text-xs text-gray-500 leading-none">2 min ago</span>
-				</div>
-			</div>
-			<div class="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
-				<div>
-					<div class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-						<p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
-					</div>
-					<span class="text-xs text-gray-500 leading-none">2 min ago</span>
-				</div>
-				{% if user_info.image %}
-					<img
-					class="mr-2 w-10 h-10 rounded-full"
-					src="{{user_info.image.url}} "
-					alt="Jese Leos">
-				{% else %}
-					<div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-						<span class="font-medium text-sm text-gray-600 dark:text-gray-300">JL</span>
-					</div>
-				{% endif %} 
-			</div> -->
+			
 			
 		</div>
 		<form id="form" class="">
@@ -85,16 +50,16 @@
 	const chatSocket = new WebSocket('ws://' + window.location.hostname + ':8001/ws/socket-server/');
 
 	chatSocket.onopen = (e) =>{
-		 
+		 console.log("Connection established!")
 	}
 
     chatSocket.onmessage = function(e) {
         let data = JSON.parse(e.data);
 		console.log("Data: ",data)
-		
+		user_info_id = '{{user_info.id}}'
 	
 
-		if(data.type === 'chat' && data.receiver_id === '{{user.id}}'){
+		if(data.type === 'chat' && data.sender_id === '{{user_info.id}}'){
 			let messages = document.querySelector('#messages')
 			messages.insertAdjacentHTML('beforeend',`
 				<div class="flex w-full mt-2 space-x-3 max-w-xs">
@@ -145,14 +110,16 @@
 			document.querySelector('#chat').focus()
 		}
 		else {
-			console.log(data.receiver_id, '{{user_info.id}}')
-			console.log(data.sender_id, '{{user_info.id}}')
+			console.log(data.receiver_id, '{{user.id}}')
+
+			console.log(data.sender_id, user_info_id)
 			console.log("Else statement is executed")
 		}
 	};
 
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
+		
     };
 
 	// Submit when the user clicks the button or presses enter
@@ -175,8 +142,6 @@
 			'receiver_id': '{{user_info.id}}'
         }));
 		form.reset();
-		
-		
 	})
 	
 </script>

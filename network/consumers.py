@@ -3,7 +3,7 @@ import json
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 
-print("Consumer py is running")
+
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_group_name = 'test'
@@ -24,6 +24,7 @@ class ChatConsumer(WebsocketConsumer):
             global receiver_id
             sender_id = text_data_json['sender_id']
             receiver_id = text_data_json['receiver_id']
+            print(f'Sender_id: {sender_id} Message: {message}')
 
 
             async_to_sync(self.channel_layer.group_send)(

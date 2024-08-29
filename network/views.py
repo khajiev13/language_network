@@ -4,8 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import User, Post, Comment, Like
-from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
+
 
 def index(request):
     return render(request, "network/index.html")
@@ -56,7 +57,8 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
+            user = User.objects.create_user(
+                username, email, password, first_name=first_name, last_name=last_name)
             if image:
                 user.image = image
             user.save()
@@ -69,16 +71,17 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+
 def posts(request):
     # Save the post when a form is submitted
     if request.POST:
         title = request.POST['title']
         content = request.POST['content']
         user = request.user
-        post = Post.objects.create(author=user,title=title,content=content)
+        post = Post.objects.create(author=user, title=title, content=content)
         post.save()
         all_posts = Post.objects.order_by('-created_at')
-        return render(request, "network/posts.html", {"posts":all_posts, "message": "Your post has been added sucessfully."})
+        return render(request, "network/posts.html", {"posts": all_posts, "message": "Your post has been added sucessfully."})
 
     all_posts = Post.objects.order_by('-created_at')
     page = request.GET.get('page', 1)
@@ -91,42 +94,45 @@ def posts(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
-    return render(request, "network/posts.html", {"posts":posts, 'page_obj':posts})
+    return render(request, "network/posts.html", {"posts": posts, 'page_obj': posts})
 
 
-def new_comment(request,post_id):
+def new_comment(request, post_id):
     if request.POST:
         # Get the post and the author, content
         post = Post.objects.get(id=post_id)
-        author = User.objects.get(id= request.user.id)
+        author = User.objects.get(id=request.user.id)
         content = request.POST['comment_input']
         # Create a new comment
 
-        new_comment = Comment.objects.create(author=author,post=post, content=content)
+        new_comment = Comment.objects.create(
+            author=author, post=post, content=content)
         new_comment.save()
         all_posts = Post.objects.order_by('-created_at')
-        return render(request, "network/posts.html", {"posts":all_posts, "message": "Your comment has been added sucessfully."})
+        return render(request, "network/posts.html", {"posts": all_posts, "message": "Your comment has been added sucessfully."})
     else:
         return None
-    
+
 
 def post(request, post_id):
     post = Post.objects.get(id=post_id)
 
     if request.POST:
-        #Get the parent ID if there is one
+        # Get the parent ID if there is one
         parent_id = request.POST['reply_to_comment_id']
         comment_content = request.POST['comment_input']
-        author = User.objects.get(id= request.user.id)
+        author = User.objects.get(id=request.user.id)
         if len(parent_id) > 0:
             parent_comment = Comment.objects.get(id=parent_id)
-            comment = Comment.objects.create(post=post, parent=parent_comment,author=author,content=comment_content)
+            comment = Comment.objects.create(
+                post=post, parent=parent_comment, author=author, content=comment_content)
         else:
-            comment = Comment.objects.create(post=post, author=author,content=comment_content)
+            comment = Comment.objects.create(
+                post=post, author=author, content=comment_content)
         comment.save()
-        return render(request, "network/post.html",{"post": post, 'message': 'Your comment has been posted.'})
+        return render(request, "network/post.html", {"post": post, 'message': 'Your comment has been posted.'})
 
-    return render(request, "network/post.html",{"post": post})
+    return render(request, "network/post.html", {"post": post})
 
 
 def user(request, user_id):
@@ -146,11 +152,11 @@ def user(request, user_id):
     else:
         followers = False
     context = {
-        "user_info": user, 
-        'posts':posts,
+        "user_info": user,
+        'posts': posts,
         'followers': followers
     }
-    return render(request, "network/user.html",context)
+    return render(request, "network/user.html", context)
 
 
 def following(request):
@@ -171,7 +177,7 @@ def following(request):
 
     context = {
         "posts": posts,
-        'page_obj':posts
+        'page_obj': posts
     }
     return render(request, "network/following.html", context)
 
@@ -187,6 +193,7 @@ def toggle_like(request, post_id):
         return JsonResponse({'likes_count': post.likes.count()})
     return JsonResponse({'error': 'Unauthorized'}, status=401)
 
+
 def edit_post(request, post_id):
     if request.method == "POST" and request.user.is_authenticated:
         post = get_object_or_404(Post, id=post_id)
@@ -201,7 +208,8 @@ def edit_post(request, post_id):
                 return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     return JsonResponse({'error': 'Unauthorized'}, status=401)
 
+
 def message(request, user_id):
     if request.user.is_authenticated:
         user = User.objects.get(id=user_id)
-        return render(request, "network/message.html",{'user_info':user})
+        return render(request, "network/message.html", {'user_info': user})
